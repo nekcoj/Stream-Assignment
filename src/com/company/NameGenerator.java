@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 
 public class NameGenerator {
     Stream<String> petNamesFromFile = Files.lines(Paths.get("pet-names-4.txt"));
-    List<String> petNames;
-    List<String> availablePetNames;
-    List<String> names = Arrays.asList("Raffe", "Hang", "Sofia", "Alexandra", "Michelle", "Joacim", "Janis", "Petru", "Anton", "Tien"
+    static List<String> petNames;
+    static List<String> availablePetNames;
+    static List<String> names = Arrays.asList("Raffe", "Hang", "Sofia", "Alexandra", "Michelle", "Joacim", "Janis", "Petru", "Anton", "Tien"
             , "Alexander", "Calle", "Magnus", "Markus", "David", "Daniel");
 
 
@@ -36,9 +36,17 @@ public class NameGenerator {
         printList.forEach(s -> System.out.printf("%s\n", s));
     }
 
-    public String getPetName(){
-        String petName  = availablePetNames.get((int)(Math.random() * availablePetNames.size()));
-        availablePetNames.remove(petName);
+    public static String getPetName(){
+        int petNamePos = (int)(Math.random() * availablePetNames.size());
+        String petName = "";
+        if(!availablePetNames.isEmpty()) {
+             petName = availablePetNames.get(petNamePos);
+            availablePetNames.remove(petNamePos);
+        }
         return petName;
+    }
+
+    public static List<String> getNames(){
+        return names;
     }
 }

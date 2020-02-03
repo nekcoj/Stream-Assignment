@@ -1,23 +1,29 @@
 package com.company;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Pet {
     List<String> petTypes = Arrays.asList("Snake", "Pig", "Dog", "Cat", "Spider");
-    String petType = "";
-    String petName;
+    public String petType = "";
+    public String petName;
 
-    public Pet() throws IOException {
-        NameGenerator getPetName = new NameGenerator();
-        petName = getPetName.getPetName();
+    public Pet() {
+        petName = NameGenerator.getPetName();
         if(!petName.equals(""))
-        this.petType = petTypes.get((int)(Math.random() * 4));
+        this.petType = petTypes.get((int)(Math.random() * 5));
     }
 
-    public String listPets(List<Pet> pets){
-        return pets.toString();
+    public String getPetType() {
+        return this.petType;
+    }
+
+    public String getPetName() {
+        return this.petName;
+    }
+
+    @Override
+    public String toString() {
+        return petType + ": " + petName;
     }
 }

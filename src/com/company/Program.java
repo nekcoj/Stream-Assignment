@@ -1,54 +1,58 @@
 package com.company;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Program {
-    List<Person> persons = new ArrayList<>();
-    List<Pet> pets;
+    public List<Person> persons = new ArrayList<>();
     Scanner scan = new Scanner(System.in);
 
 
     public Program() throws IOException {
-        NameGenerator nameGenerator = new NameGenerator();
-        for (String n: nameGenerator.names) {
+        new NameGenerator();
+        new PetStore();
+        for (String n : NameGenerator.getNames()) {
             Person p = new Person(n);
             persons.add(p);
         }
         show();
     }
 
-    private void show() throws IOException {
+    private void show() {
         System.out.println("[1] show pet owners\n" +
-                "[2] sell pets");
+                "[2] sell pets\n" +
+                "[3] print pets");
         int menuChoice = scan.nextInt();
         if (menuChoice == 1) {
-            printPetOwners();
+            printResult1();
             show();
-        } else if ( menuChoice == 2) {
-            sellPets();
+        } else if (menuChoice == 2) {
+            PetStore.sellPets(persons);
+            show();
+        } else if (menuChoice == 3) {
+            printResult2();
             show();
         }
     }
 
-    private void printPetOwners() {
+    private void printResult1() {
         persons.stream()
-            .sorted((a,b) -> b.name.compareTo(a.name))
-            .collect(Collectors.toList())
-            .forEach(s -> System.out.printf("Name: %s (%s) owns the animals: %s\n", s.getName(), s.getAge(), s.getPets()));
+                .sorted((a, b) -> b.name.compareTo(a.name))
+//                .filter(s -> !(s.getPetListFromPerson().isEmpty()))
+                .collect(Collectors.toList())
+                .forEach(s -> System.out.println(s.toString()));
     }
 
-    private void sellPets() throws IOException {
-        pets = new ArrayList<>();
-        for (Person person: persons) {
-            for(int i = 0; i < (int)(Math.random() * 5); i++){
-                Pet pet = new Pet();
-                pets.add(pet);
-            }
-            person.addPet(pets);
-        }
+
+    private void printResult2() {
+        Comparator<Person> comparePetListLength = Comparator.comparing(a -> a.getPetListFromPerson().size());
+        Comparator<Person> compareName = Comparator.comparing(Person::getName);
+
+        persons.stream()
+                .sorted(comparePetListLength.thenComparing(compareName))
+                .filter(s -> !(s.getPetListFromPerson().isEmpty()))
+                .collect(Collectors.toList())
+                .forEach(s -> System.out.println(s.toString()));
     }
 }
